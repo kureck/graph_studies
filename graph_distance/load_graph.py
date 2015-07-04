@@ -30,7 +30,6 @@ def split_single_route(single_route):
 
         :param single_route: route string in the form "AB8"
         :returns: a tuple in the form ("A", "B", 8)
-
     """
     decoupled = list(single_route)
     decoupled[-1] = int(decoupled[-1])
@@ -44,3 +43,27 @@ def split_routes_input(raw_routes):
         :returns: a list of tuples in the form [("A", "B", 8)]
     """
     return [split_single_route(x) for x in raw_routes]
+
+
+def plot_graph(graph):
+    import matplotlib.pyplot as plt
+    nx.draw_random(graph)
+    plt.savefig("/tmp/temp_graph.png")
+
+
+def create_graph(file_name):
+    DG = load_graph_from_file(split_routes_input(load_file(file_name)))
+    return DG
+
+
+def run(file_name):
+    DG = load_graph_from_file(split_routes_input(load_file(file_name)))
+    #import ipdb; ipdb.set_trace()
+    plot_graph(DG)
+
+
+if __name__ == "__main__":
+    import paths_setup as ph
+    run(ph.DEFAULT_INPUT_FILE)
+
+
