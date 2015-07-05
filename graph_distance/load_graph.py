@@ -58,7 +58,8 @@ def create_graph(file_name):
 
 def run(file_name):
     DG = load_graph_from_file(split_routes_input(load_file(file_name)))
-    #import ipdb; ipdb.set_trace()
+    t = DG.get_edge_data("A", "E")
+    import ipdb; ipdb.set_trace()
     plot_graph(DG)
 
 
