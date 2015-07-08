@@ -40,11 +40,12 @@ def distance_A_E_D(graph):
 
 
 # The number of trips starting at C and ending at C with a maximum of 3 stops
-def trips_C_to_C_3_stops(graph):
+def trips_C_to_C_3_stops(graph, node):
     count = 0
-    for path in nx.all_simple_paths(graph, "C", "C"):
-        if len(path) <= 4:
-            count += 1
+    node = graph.get(node)
+    for path in node:
+        trips_C_to_C_3_stops(graph.get(path), path)
+
     return count
 
 # The number of trips starting at A and ending at C with exactly 4 stops
@@ -76,19 +77,12 @@ def trips_A_to_C_4_stops(graph, source):
 
 # The length of the shortest route (in terms of distance to travel) from A to C
 def shortest_path_A_C(graph):
-    return nx.shortest_path_length(graph,source="A",target="C", weight='weight')
+    return 0
 
 
 # The length of the shortest route (in terms of distance to travel) from B to B
 def shortest_path_B_B(graph):
     min_dist = float('inf')
-    for path in nx.all_simple_paths(graph, "B", "B"):
-        path1 = path[0:2]
-        path2 = path[2:]
-        path_dist1 = nx.shortest_path_length(graph,source=path1[0],target=path1[1], weight='weight')
-        path_dist2 = nx.shortest_path_length(graph,source=path1[1],target=path2[-1], weight='weight')
-        if (path_dist1 + path_dist2) < min_dist:
-            min_dist = path_dist1 + path_dist2
 
     return min_dist
 
@@ -96,3 +90,12 @@ def shortest_path_B_B(graph):
 # The number of different routes from C to C with a distance of less than 30
 def different_routes_C_C_30(graph):
     pass
+
+if __name__ == "__main__":
+    graph = { "A": { "B": 5, "D": 5, "E": 7},
+              "B": { "C": 4},
+              "C": { "D": 8, "E": 2},
+              "D": { "C": 8, "E": 6},
+              "E": { "B": 3}}
+    import ipdb; ipdb.set_trace()
+    print(trips_C_to_C_3_stops(graph, "C"))
