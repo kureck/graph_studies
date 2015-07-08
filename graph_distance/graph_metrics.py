@@ -40,13 +40,34 @@ def distance_A_E_D(graph):
 
 
 # The number of trips starting at C and ending at C with a maximum of 3 stops
-def trips_C_to_C_3_stops(graph, node):
+def trips_C_to_C_3_stops(graph, node=None):
     count = 0
     node = graph.get(node)
     for path in node:
-        trips_C_to_C_3_stops(graph.get(path), path)
+        neighbour = get_neighbor(graph, path)
+
 
     return count
+
+
+def get_neighbor(graph, source):
+    return graph.get(source)
+
+
+def generatePaths(theGraph, startNode, endNode, allPaths, pathSoFar=""):
+        """
+        Recursive function. Finds all paths through the specified
+        graph from start node to end node. For cyclical paths, this stops
+        at the end of the first cycle.
+        """
+        pathSoFar = pathSoFar + startNode
+
+        for node in theGraph[startNode]:
+
+            if node == endNode:
+                allPaths.append(pathSoFar + node)
+            else:
+                generatePaths(theGraph, node, endNode, allPaths, pathSoFar)
 
 # The number of trips starting at A and ending at C with exactly 4 stops
 
@@ -75,6 +96,7 @@ def trips_C_to_C_3_stops(graph, node):
 def trips_A_to_C_4_stops(graph, source):
     pass
 
+
 # The length of the shortest route (in terms of distance to travel) from A to C
 def shortest_path_A_C(graph):
     return 0
@@ -92,10 +114,13 @@ def different_routes_C_C_30(graph):
     pass
 
 if __name__ == "__main__":
-    graph = { "A": { "B": 5, "D": 5, "E": 7},
-              "B": { "C": 4},
-              "C": { "D": 8, "E": 2},
-              "D": { "C": 8, "E": 6},
-              "E": { "B": 3}}
-    import ipdb; ipdb.set_trace()
-    print(trips_C_to_C_3_stops(graph, "C"))
+    graph = {"A": {"B": 5, "D": 5, "E": 7},
+             "B": {"C": 4},
+             "C": {"D": 8, "E": 2},
+             "D": {"C": 8, "E": 6},
+             "E": {"B": 3}}
+#    print(trips_C_to_C_3_stops(graph, "C"))
+paths = []
+import ipdb; ipdb.set_trace()
+generatePaths(graph, "C", "C", paths)
+print(paths)

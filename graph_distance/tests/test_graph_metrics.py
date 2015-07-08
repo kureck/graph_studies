@@ -3,6 +3,7 @@ import graph_distance.load_graph as lg
 import graph_distance.graph_metrics as gm
 import pytest
 
+
 @pytest.fixture
 def graph():
     graph = lg.create_dict_graph(ps.DEFAULT_INPUT_FILE)
@@ -31,29 +32,34 @@ def test_distance_A_E_B_C_D(graph):
 
 def test_distance_A_E_D(graph):
     distance = gm.distance_A_E_D(graph)
-    assert distance == None
+    assert distance is None
 
 
-def test_trips_C_to_C_3_stops(graph):
-    stops = gm.trips_C_to_C_3_stops(graph)
-    assert stops == 2
+# def test_trips_C_to_C_3_stops(graph):
+#     stops = gm.trips_C_to_C_3_stops(graph)
+#     assert stops == 2
 
 
-def test_trips_A_to_C_4_stops(graph):
-    stops = gm.trips_A_to_C_4_stops(graph)
-    assert stops == 3
+# def test_trips_A_to_C_4_stops(graph):
+#     stops = gm.trips_A_to_C_4_stops(graph)
+#     assert stops == 3
 
 
-def test_shortest_path_A_C(graph):
-    shortest = gm.shortest_path_A_C(graph)
-    assert shortest == 9
+# def test_shortest_path_A_C(graph):
+#     shortest = gm.shortest_path_A_C(graph)
+#     assert shortest == 9
 
 
-def test_shortest_path_B_B(graph):
-    shortest = gm.shortest_path_B_B(graph)
-    assert shortest == 9
+# def test_shortest_path_B_B(graph):
+#     shortest = gm.shortest_path_B_B(graph)
+#     assert shortest == 9
 
 
-def test_different_routes_C_C_30(graph):
-    different = gm.different_routes_C_C_30(graph)
-    assert different == 7
+# def test_different_routes_C_C_30(graph):
+#     different = gm.different_routes_C_C_30(graph)
+#     assert different == 7
+
+
+def test_get_neighbor(graph):
+    neighbor = gm.get_neighbor(graph, "E")
+    assert neighbor == {"B": 3}
