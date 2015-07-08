@@ -39,35 +39,27 @@ def distance_A_E_D(graph):
     return has_path
 
 
-# The number of trips starting at C and ending at C with a maximum of 3 stops
-def trips_C_to_C_3_stops(graph, node=None):
-    count = 0
-    node = graph.get(node)
-    for path in node:
-        neighbour = get_neighbor(graph, path)
-
-
-    return count
-
-
 def get_neighbor(graph, source):
     return graph.get(source)
 
 
-def generatePaths(theGraph, startNode, endNode, allPaths, pathSoFar=""):
+# The number of trips starting at C and ending at C with a maximum of 3 stops
+def trips_C_to_C_3_stops(graph, start, objective, n_stops_cycle, stops=0):
         """
         Recursive function. Finds all paths through the specified
         graph from start node to end node. For cyclical paths, this stops
         at the end of the first cycle.
         """
-        pathSoFar = pathSoFar + startNode
 
-        for node in theGraph[startNode]:
+        stops += 1
+        for node in graph[start]:
 
-            if node == endNode:
-                allPaths.append(pathSoFar + node)
+            if node == objective:
+                n_stops_cycle.append(stops)
             else:
-                generatePaths(theGraph, node, endNode, allPaths, pathSoFar)
+                trips_C_to_C_3_stops(graph, node, objective, n_stops_cycle, stops)
+        return sum([1 for x in n_stops_cycle if x <= 3])
+
 
 # The number of trips starting at A and ending at C with exactly 4 stops
 
@@ -119,8 +111,7 @@ if __name__ == "__main__":
              "C": {"D": 8, "E": 2},
              "D": {"C": 8, "E": 6},
              "E": {"B": 3}}
-#    print(trips_C_to_C_3_stops(graph, "C"))
-paths = []
-import ipdb; ipdb.set_trace()
-generatePaths(graph, "C", "C", paths)
-print(paths)
+    #    print(trips_C_to_C_3_stops(graph, "C"))
+    paths = []
+    trips_C_to_C_3_stops(graph, "C", "C", paths)
+    print(paths)

@@ -35,9 +35,9 @@ def test_distance_A_E_D(graph):
     assert distance is None
 
 
-# def test_trips_C_to_C_3_stops(graph):
-#     stops = gm.trips_C_to_C_3_stops(graph)
-#     assert stops == 2
+def test_trips_C_to_C_3_stops(graph):
+    stops = gm.trips_C_to_C_3_stops(graph, "C", "C", [])
+    assert stops == 2
 
 
 # def test_trips_A_to_C_4_stops(graph):
