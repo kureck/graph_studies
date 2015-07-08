@@ -1,7 +1,23 @@
 import networkx as nx
+from collections import defaultdict
+
+def load_graph_as_dict(routes):
+    """ Transform a list of tuples into a graph as a dictionary
+
+        :param routes: list of routes tuples 
+                       in the form [("A", "B", 5), ("A", "D", 5), ("A", "E", 7)]
+        :returns: a dictionary graph
+                  in the form { "A": { "B": 5, "D": 5, "E": 7}
+    """
+    graph = defaultdict(dict)
+    for route in routes:
+        source = route[0]
+        graph[source].update({route[1]: route[2]}) 
+
+    return graph
 
 
-def load_graph_from_file(routes):
+def load_networkx_graph_from_file(routes):
     """ Transform a list of tuples into a graph object
 
         :param routes: list of routes tuples
@@ -51,13 +67,18 @@ def plot_graph(graph):
     plt.savefig("/tmp/temp_graph.png")
 
 
-def create_graph(file_name):
-    DG = load_graph_from_file(split_routes_input(load_file(file_name)))
+def create_dict_graph(file_name):
+    graph = load_graph_as_dict(split_routes_input(load_file(file_name)))
+    return graph
+
+
+def create_networkx_graph(file_name):
+    DG = load_networkx_graph_from_file(split_routes_input(load_file(file_name)))
     return DG
 
 
 def run(file_name):
-    DG = load_graph_from_file(split_routes_input(load_file(file_name)))
+    DG = load_networkx_graph_from_file(split_routes_input(load_file(file_name)))
     #t = DG.get_edge_data("A", "E")
     import ipdb; ipdb.set_trace()
     plot_graph(DG)

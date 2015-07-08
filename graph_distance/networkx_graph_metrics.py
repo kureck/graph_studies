@@ -1,42 +1,45 @@
+import networkx as nx
+import graph_distance.paths_setup as ps
+import graph_distance.load_graph as lg
+
+
 # The distance of the route A-B-C
-def distance_A_B_C(graph, path=None):
-    A = graph.get("A")
-    AB = A.get("B")
-    B = graph.get("B")
-    BC = B.get("C")
+def distance_A_B_C(graph):
+    AB = graph.get_edge_data("A", "B")['weight']
+    BC = graph.get_edge_data("B", "C")['weight']
     return AB + BC
 
 
 # The distance of the route A-D
 def distance_A_D(graph):
-    AD = graph.get("A").get("D")
+    AD = graph.get_edge_data("A", "D")['weight']
     return AD
 
 
 # The distance of the route A-D-C
 def distance_A_D_C(graph):
-    A = graph.get("A")
-    AD = A.get("D")
-    D = graph.get("D")
-    DC = D.get("C")
+    AD = graph.get_edge_data("A", "D")['weight']
+    DC = graph.get_edge_data("D", "C")['weight']
     return AD + DC
 
 
 # The distance of the route A-E-B-C-D
 def distance_A_E_B_C_D(graph):
-    AE = graph.get("A").get("E")
-    EB = graph.get("E").get("B")
-    BC = graph.get("B").get("C")
-    CD = graph.get("C").get("D")
+    AE = graph.get_edge_data("A", "E")['weight']
+    EB = graph.get_edge_data("E", "B")['weight']
+    BC = graph.get_edge_data("B", "C")['weight']
+    CD = graph.get_edge_data("C", "D")['weight']
     return sum([AE, EB, BC, CD])
 
 
 # The distance of the route A-E-D
 def distance_A_E_D(graph):
-    AE = graph.get("A").get("E")
-    ED = graph.get("E").get("D")
-    has_path = None if None in [AE, ED] else sum([AE, ED])
-    return has_path
+    if None in (graph.get_edge_data("E", "D"), graph.get_edge_data("A", "E")):
+        return None
+    else:
+        AE = graph.get_edge_data("A", "E")['weight']
+        ED = graph.get_edge_data("E", "D")['weight']
+    return AE + ED
 
 
 # The number of trips starting at C and ending at C with a maximum of 3 stops

@@ -16,3 +16,16 @@ def test_split_routes_input():
     routes_input = ["AB5", "BC4", "CD8"]
     routes = lg.split_routes_input(routes_input)
     assert routes == [("A", "B", 5), ("B", "C", 4), ("C", "D", 8)]
+
+def test_load_graph_as_dict():
+    routes = [("A", "B", 5), ("A", "D", 5), ("A", "E", 7),
+              ("B", "C", 4),
+              ("C", "D", 8), ("C", "E", 2),
+              ("D", "C", 8), ("D", "E", 6),
+              ("E", "B", 3)]
+    graph_as_dict = lg.load_graph_as_dict(routes)
+    assert graph_as_dict == { "A": { "B": 5, "D": 5, "E": 7},
+                              "B": { "C": 4},
+                              "C": { "D": 8, "E": 2},
+                              "D": { "C": 8, "E": 6},
+                              "E": { "B": 3}}
