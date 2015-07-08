@@ -85,8 +85,28 @@ def trips_C_to_C_3_stops(graph, start, objective, n_stops_cycle, stops=0):
 # returns [('A', 'D'), ('A', 'B'), ('A', 'E'), ('D', 'E'), ('D', 'C'), ('B', 'C'), ('E', 'B'), ('C', 'D'), ('C', 'E')]
 
 
-def trips_A_to_C_4_stops(graph, source):
-    pass
+def trips_A_to_C_4_stops(graph, start, objective, n_stops_cycle, allPaths, pathSoFar="",stops=0, visited=False):
+        """
+        Recursive function. Finds all paths through the specified
+        graph from start node to end node. For cyclical paths, this stops
+        at the end of the first cycle.
+        """
+
+        pathSoFar = pathSoFar + start
+        stops += 1
+        for node in graph[start]:
+            print(node)
+            print(graph[node])
+            if node == objective and visited is True:
+                allPaths.append(pathSoFar + node)
+                print(pathSoFar+node)
+                print("-----------------------------")
+                n_stops_cycle.append(stops)
+            else:
+                if node == objective:
+                    visited = True
+                trips_A_to_C_4_stops(graph, node, objective, n_stops_cycle, allPaths, pathSoFar, stops, visited)
+        #return sum([1 for x in n_stops_cycle if x == 4])
 
 
 # The length of the shortest route (in terms of distance to travel) from A to C
@@ -111,7 +131,9 @@ if __name__ == "__main__":
              "C": {"D": 8, "E": 2},
              "D": {"C": 8, "E": 6},
              "E": {"B": 3}}
-    #    print(trips_C_to_C_3_stops(graph, "C"))
+    n_paths = []
     paths = []
-    trips_C_to_C_3_stops(graph, "C", "C", paths)
+    import ipdb; ipdb.set_trace()
+    trips_A_to_C_4_stops(graph, "A", "C", n_paths, paths)
     print(paths)
+    print([x for x in paths if len(x) == 5])
