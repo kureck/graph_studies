@@ -61,52 +61,25 @@ def trips_C_to_C_3_stops(graph, start, objective, n_stops_cycle, stops=0):
         return sum([1 for x in n_stops_cycle if x <= 3])
 
 
-# The number of trips starting at A and ending at C with exactly 4 stops
-
-# nx.bfs_successors(graph, origin)
-# returns {'A': ['D', 'B', 'E'], 'D': ['C']}
-
-# graph.neighbors(node)
-# return ['D', 'B', 'E']
-
-# Maybe I must use recursion here.
-# 1) Get neighbours
-# 2) Mount a dict with the path e number of stop and edges visited
-#   * { "path": ['A', 'B', 'C', 'D', 'C'],
-#        "edges_visited": [('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'C')],
-#        "stops": 4}
-# 3) Get edge
-# 4) Mount path
-# 5) Count stop
-# 6) Add visited edge into edges_visited
-
-# Explore the edges
-# graph.edges()
-# returns [('A', 'D'), ('A', 'B'), ('A', 'E'), ('D', 'E'), ('D', 'C'), ('B', 'C'), ('E', 'B'), ('C', 'D'), ('C', 'E')]
-
-
-def trips_A_to_C_4_stops(graph, start, objective, n_stops_cycle, allPaths, pathSoFar="",stops=0, visited=False):
-        """
-        Recursive function. Finds all paths through the specified
-        graph from start node to end node. For cyclical paths, this stops
-        at the end of the first cycle.
-        """
-
-        pathSoFar = pathSoFar + start
+# Has some problem here!
+# If the keys are not sorted the behavior is inconstant. The answer depends on the order which the neighbor
+# is visited. 
+# For example: 
+#   when the node D is visited the two possibles neighbors are C and E
+#   if we first visit C it marks C as visited then the recursion goes to
+#   the next D neighbor (E). When it gets there, C somehow has been marked as visited
+#   then the recursion stops when the next C is found.
+#   This doesn't happen when the order is the opposite.
+def trips_A_to_C_4_stops(graph, start, objective, n_stops_cycle, stops=0, visited=False):
         stops += 1
-        for node in graph[start]:
-            print(node)
-            print(graph[node])
+        for node in sorted(graph[start]):
             if node == objective and visited is True:
-                allPaths.append(pathSoFar + node)
-                print(pathSoFar+node)
-                print("-----------------------------")
                 n_stops_cycle.append(stops)
             else:
                 if node == objective:
                     visited = True
-                trips_A_to_C_4_stops(graph, node, objective, n_stops_cycle, allPaths, pathSoFar, stops, visited)
-        #return sum([1 for x in n_stops_cycle if x == 4])
+                trips_A_to_C_4_stops(graph, node, objective, n_stops_cycle, stops, visited)
+        return sum([1 for x in n_stops_cycle if x == 5])
 
 
 # The length of the shortest route (in terms of distance to travel) from A to C
@@ -131,9 +104,7 @@ if __name__ == "__main__":
              "C": {"D": 8, "E": 2},
              "D": {"C": 8, "E": 6},
              "E": {"B": 3}}
-    n_paths = []
     paths = []
-    import ipdb; ipdb.set_trace()
-    trips_A_to_C_4_stops(graph, "A", "C", n_paths, paths)
+    trips_A_to_C_4_stops(graph, "A", "C", paths)
     print(paths)
     print([x for x in paths if len(x) == 5])

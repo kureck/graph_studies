@@ -40,9 +40,9 @@ def test_trips_C_to_C_3_stops(graph):
     assert stops == 2
 
 
-# def test_trips_A_to_C_4_stops(graph):
-#     stops = gm.trips_A_to_C_4_stops(graph)
-#     assert stops == 3
+def test_trips_A_to_C_4_stops(graph):
+    stops = gm.trips_A_to_C_4_stops(graph, "A", "C", [])
+    assert stops == 3
 
 
 # def test_shortest_path_A_C(graph):
