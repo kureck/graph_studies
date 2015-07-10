@@ -1,42 +1,41 @@
+def get_route(route):
+    return route.split("-")
+
+
+def path_distance(graph, route):
+    nodes = get_route(route)
+    total_distance = 0
+    for i, node in enumerate(nodes[:-1]):
+        distance = graph.get(nodes[i]).get(nodes[i+1])
+        if distance is None:
+            return distance
+        total_distance += distance
+    return total_distance
+
+
 # The distance of the route A-B-C
-def distance_A_B_C(graph, path=None):
-    A = graph.get("A")
-    AB = A.get("B")
-    B = graph.get("B")
-    BC = B.get("C")
-    return AB + BC
+def distance_A_B_C(graph):
+    return path_distance(graph, "A-B-C")
 
 
 # The distance of the route A-D
 def distance_A_D(graph):
-    AD = graph.get("A").get("D")
-    return AD
+    return path_distance(graph, "A-D")
 
 
 # The distance of the route A-D-C
 def distance_A_D_C(graph):
-    A = graph.get("A")
-    AD = A.get("D")
-    D = graph.get("D")
-    DC = D.get("C")
-    return AD + DC
+    return path_distance(graph, "A-D-C")
 
 
 # The distance of the route A-E-B-C-D
 def distance_A_E_B_C_D(graph):
-    AE = graph.get("A").get("E")
-    EB = graph.get("E").get("B")
-    BC = graph.get("B").get("C")
-    CD = graph.get("C").get("D")
-    return sum([AE, EB, BC, CD])
+    return path_distance(graph, "A-E-B-C-D")
 
 
 # The distance of the route A-E-D
 def distance_A_E_D(graph):
-    AE = graph.get("A").get("E")
-    ED = graph.get("E").get("D")
-    has_path = None if None in [AE, ED] else sum([AE, ED])
-    return has_path
+    return path_distance(graph, "A-E-D")
 
 
 def get_neighbor(graph, source):
@@ -45,11 +44,6 @@ def get_neighbor(graph, source):
 
 # The number of trips starting at C and ending at C with a maximum of 3 stops
 def trips_C_to_C_3_stops(graph, start, objective, n_stops_cycle, stops=0):
-        """
-        Recursive function. Finds all paths through the specified
-        graph from start node to end node. For cyclical paths, this stops
-        at the end of the first cycle.
-        """
 
         stops += 1
         for node in graph[start]:
@@ -82,16 +76,47 @@ def trips_A_to_C_4_stops(graph, start, objective, n_stops_cycle, stops=0, visite
         return sum([1 for x in n_stops_cycle if x == 5])
 
 
+def get_smallest(nodes):
+    smallest = min(nodes, key=nodes.get)
+    del nodes[smallest]
+    return smallest, nodes
+
+
+def dijkstra(graph, start, objective):
+    inf = float('inf') 
+    distances = { key: inf for key in graph.keys()}
+    parent = { key: None for key in graph.keys()}
+    nodes = { key: inf for key in graph.keys()}
+
+    distances[start] = 0
+    nodes[start] = 0
+
+    while nodes:
+        smallest, nodes = get_smallest(nodes)
+
+        if smallest is None or distances[smallest] == inf:
+            break
+
+        for neighbor in graph[smallest]:
+            alt = distances[smallest] + graph[smallest][neighbor]
+            if alt < distances[neighbor]:
+                distances[neighbor] = alt
+                parent[neighbor] = smallest
+                nodes[neighbor] = alt
+    return {"distances": distances}
+
+
 # The length of the shortest route (in terms of distance to travel) from A to C
 def shortest_path_A_C(graph):
-    return 0
+    return dijkstra(graph, "A", "C")['distances']['C']
 
 
 # The length of the shortest route (in terms of distance to travel) from B to B
 def shortest_path_B_B(graph):
-    min_dist = float('inf')
+    BC = dijkstra(graph, "B", "C")["distances"]["C"]
+    CB = dijkstra(graph, "C", "B")["distances"]["B"]
 
-    return min_dist
+    return (BC + CB)
 
 
 # The number of different routes from C to C with a distance of less than 30
@@ -104,7 +129,4 @@ if __name__ == "__main__":
              "C": {"D": 8, "E": 2},
              "D": {"C": 8, "E": 6},
              "E": {"B": 3}}
-    paths = []
-    trips_A_to_C_4_stops(graph, "A", "C", paths)
-    print(paths)
-    print([x for x in paths if len(x) == 5])
+    print(path_distance(graph, "A-E-D"))

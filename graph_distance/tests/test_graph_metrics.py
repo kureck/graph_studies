@@ -10,6 +10,16 @@ def graph():
     return graph
 
 
+def test_get_route():
+    route = gm.get_route("A-B-C")
+    assert route == ["A", "B", "C"]
+
+
+def test_path_distance(graph):
+    distance = gm.path_distance(graph, "A-B-C")
+    assert distance == 9
+
+
 def test_distance_A_B_C(graph):
     distance = gm.distance_A_B_C(graph)
     assert distance == 9
@@ -45,14 +55,19 @@ def test_trips_A_to_C_4_stops(graph):
     assert stops == 3
 
 
-# def test_shortest_path_A_C(graph):
-#     shortest = gm.shortest_path_A_C(graph)
-#     assert shortest == 9
+def test_dijktra(graph):
+    shortest = gm.dijkstra(graph, "C", "B")
+    assert shortest['distances'] == {'B': 5, 'A': float('inf'), 'C': 0, 'E': 2, 'D': 8}
 
 
-# def test_shortest_path_B_B(graph):
-#     shortest = gm.shortest_path_B_B(graph)
-#     assert shortest == 9
+def test_shortest_path_A_C(graph):
+    shortest = gm.shortest_path_A_C(graph)
+    assert shortest == 9
+
+
+def test_shortest_path_B_B(graph):
+    shortest = gm.shortest_path_B_B(graph)
+    assert shortest == 9
 
 
 # def test_different_routes_C_C_30(graph):
