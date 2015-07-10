@@ -26,7 +26,8 @@ For example, the first problem means to start at city A, then travel directly to
 8. The length of the shortest route (in terms of distance to travel) from A to C.
 9. The length of the shortest route (in terms of distance to travel) from B to B.
 10.The number of different routes from C to C with a distance of less than 30.
-    *In the sample data, the trips are: CDC, CEBC, CEBCDC, CDCEBC, CDEBC, CEBCEBC, CEBCEBCEBC.
+    *In the sample data, the trips are: CEBC, CEBCEBC, CEBCEBCEBC, CDEBC, CDC, CEBCDC, CDCEBC.
+    ['CEBC', 'CEBCEBC', 'CEBCEBCEBC', 'CDEBC', 'CDC']
 
 ### Test Input
 For the test input, the places are named using the first few letters of the alphabet from A to E.

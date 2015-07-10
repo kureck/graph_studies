@@ -70,9 +70,9 @@ def test_shortest_path_B_B(graph):
     assert shortest == 9
 
 
-# def test_different_routes_C_C_30(graph):
-#     different = gm.different_routes_C_C_30(graph)
-#     assert different == 7
+def test_different_routes_C_C_30(graph):
+    different = gm.num_routes(graph, "C", "C", 30)
+    assert different == 7
 
 
 def test_get_neighbor(graph):

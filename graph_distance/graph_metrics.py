@@ -56,9 +56,9 @@ def trips_C_to_C_3_stops(graph, start, objective, n_stops_cycle, stops=0):
 
 
 # Has some problem here!
-# If the keys are not sorted the behavior is inconstant. The answer depends on the order which the neighbor
-# is visited. 
-# For example: 
+# If the keys are not sorted the behavior is inconstant.
+# The answer depends on the order which the neighbor is visited.
+# For example:
 #   when the node D is visited the two possibles neighbors are C and E
 #   if we first visit C it marks C as visited then the recursion goes to
 #   the next D neighbor (E). When it gets there, C somehow has been marked as visited
@@ -83,10 +83,10 @@ def get_smallest(nodes):
 
 
 def dijkstra(graph, start, objective):
-    inf = float('inf') 
-    distances = { key: inf for key in graph.keys()}
-    parent = { key: None for key in graph.keys()}
-    nodes = { key: inf for key in graph.keys()}
+    inf = float('inf')
+    distances = {key: inf for key in graph.keys()}
+    parent = {key: None for key in graph.keys()}
+    nodes = {key: inf for key in graph.keys()}
 
     distances[start] = 0
     nodes[start] = 0
@@ -120,8 +120,32 @@ def shortest_path_B_B(graph):
 
 
 # The number of different routes from C to C with a distance of less than 30
-def different_routes_C_C_30(graph):
-    pass
+def different_routes_C_C_30(graph, start, objective, max_distance, curr_dist=0, path=[]):
+    path = path + [start]
+
+    if curr_dist > max_distance:
+        path.pop()
+        return [path]
+
+    paths = []
+
+    for node in graph[start]:
+        distance = graph.get(start).get(node)
+        new_paths = different_routes_C_C_30(graph, node, objective, max_distance, curr_dist + distance, path)
+        for new_path in new_paths:
+            paths.append(new_path)
+    return paths
+
+
+def num_routes(graph, start, objective, distance):
+    all_routes = different_routes_C_C_30(graph, start, objective, distance)
+    num_routes = 0
+
+    for route in all_routes:
+        if route[0] == start and route[-1] == objective:
+            num_routes += 1
+    return num_routes
+
 
 if __name__ == "__main__":
     graph = {"A": {"B": 5, "D": 5, "E": 7},
@@ -129,4 +153,8 @@ if __name__ == "__main__":
              "C": {"D": 8, "E": 2},
              "D": {"C": 8, "E": 6},
              "E": {"B": 3}}
-    print(path_distance(graph, "A-E-D"))
+
+    #import ipdb; ipdb.set_trace()
+    # print(num_routes(graph, "C", "C", 30))
+    paths = different_routes_C_C_30(graph, "C", "C", 30)
+    print("End")
