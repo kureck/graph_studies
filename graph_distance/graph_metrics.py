@@ -22,7 +22,7 @@ class GraphMetrics:
 
 
     # The number of trips starting at C and ending at C with a maximum of 3 stops
-    def trips_C_to_C_3_stops(self, start, objective, n_stops_cycle, stops=0):
+    def trips_with_max_stops(self, start, objective, max_stops, n_stops_cycle, stops=0):
 
             stops += 1
             for node in self._graph[start]:
@@ -30,8 +30,8 @@ class GraphMetrics:
                 if node == objective:
                     n_stops_cycle.append(stops)
                 else:
-                    self.trips_C_to_C_3_stops(node, objective, n_stops_cycle, stops)
-            return sum([1 for x in n_stops_cycle if x <= 3])
+                    self.trips_with_max_stops(node, objective, max_stops, n_stops_cycle, stops)
+            return sum([1 for x in n_stops_cycle if x <= max_stops])
 
 
     # Has one problem here!
@@ -43,7 +43,7 @@ class GraphMetrics:
     #   the next D neighbor (E). When it gets there, C somehow has been marked as visited
     #   then the recursion stops when the next C is found.
     #   This doesn't happen when the order is the opposite.
-    def trips_A_to_C_4_stops(self, start, objective, n_stops_cycle, stops=0, visited=False):
+    def trips_with_exact_stops(self, start, objective, max_stops, n_stops_cycle, stops=0, visited=False):
             stops += 1
             for node in sorted(self._graph[start]):
                 if node == objective and visited is True:
@@ -51,8 +51,8 @@ class GraphMetrics:
                 else:
                     if node == objective:
                         visited = True
-                    self.trips_A_to_C_4_stops(node, objective, n_stops_cycle, stops, visited)
-            return sum([1 for x in n_stops_cycle if x == 5])
+                    self.trips_with_exact_stops(node, objective, max_stops, n_stops_cycle, stops, visited)
+            return sum([1 for x in n_stops_cycle if x == (max_stops + 1)])
 
 
     def _get_smallest(self, nodes):
@@ -82,20 +82,19 @@ class GraphMetrics:
                     distances[neighbor] = alt
                     parent[neighbor] = smallest
                     nodes[neighbor] = alt
-        return {"distances": distances}
+
+        return distances.get(objective, 0)
 
 
     # The length of the shortest route (in terms of distance to travel) from A to C
-    def shortest_path(self, origin, destination):
-        return self.dijkstra(origin, destination)['distances'][destination]
-
-
-    # The length of the shortest route (in terms of distance to travel) from B to B
-    def shortest_path_B_B(self):
-        BC = self.dijkstra("B", "C")["distances"]["C"]
-        CB = self.dijkstra("C", "B")["distances"]["B"]
-
-        return (BC + CB)
+    def shortest_path(self, origin, objective):
+        if origin == objective:
+            shortest_paths = { x: self.dijkstra(x, objective) for x in self._graph[objective].keys()}
+            subsequent_shortest_path = min(shortest_paths, key=shortest_paths.get)
+            min_value = min(shortest_paths.values())
+            shortest_path_from = self.dijkstra(origin, subsequent_shortest_path)
+            return sum([min_value, shortest_path_from])
+        return self.dijkstra(origin, objective)
 
 
     def num_routes(self, start, objective, distance):

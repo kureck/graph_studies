@@ -30,10 +30,10 @@ def main():
     print("Output #3: %s" % graph_metrics.path_distance("A-D-C"))
     print("Output #4: %s" % graph_metrics.path_distance("A-E-B-C-D"))
     print("Output #5: %s" % graph_metrics.path_distance("A-E-D"))
-    print("Output #6: %s" % graph_metrics.trips_C_to_C_3_stops("C", "C", []))
-    print("Output #7: %s" % graph_metrics.trips_A_to_C_4_stops("A", "C", []))
+    print("Output #6: %s" % graph_metrics.trips_with_max_stops("C", "C", 3, []))
+    print("Output #7: %s" % graph_metrics.trips_with_exact_stops("A", "C", 4, []))
     print("Output #8: %s" % graph_metrics.shortest_path("A", "C"))
-    print("Output #9: %s" % graph_metrics.shortest_path_B_B())
+    print("Output #9: %s" % graph_metrics.shortest_path("B", "B"))
     print("Output #10: %s" % graph_metrics.num_routes("C", "C", 30))
 
 if __name__ == "__main__":
