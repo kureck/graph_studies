@@ -1,5 +1,3 @@
-networkx
-numpy
-scipy
 pytest
 matplotlib
+networkx
