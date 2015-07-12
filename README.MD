@@ -40,7 +40,7 @@ cd pip-1.5.6
 python setup.py install
 cd ..
 deactivate
-source ./myvenv/bin/activate
+source ./graph_distance/bin/activate
 ```
 
 Else, continue to download and run the code:
