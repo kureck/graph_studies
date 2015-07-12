@@ -1,3 +1,12 @@
+"""
+    tests.load_graph
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    Tests the steps to create a graph dictionary
+    structure from a file. 
+
+"""
+
 import pytest
 import graph_distance.paths_setup as ps
 import graph_distance.load_graph as lg

@@ -1,3 +1,12 @@
+"""
+    tests.graph_metrics
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    Tests the metrics to analyse a dictionary graph structure.
+    This tests also garantees the correct answers from the Routes Tests
+
+"""
+
 from graph_distance.paths_setup import DEFAULT_INPUT_FILE
 import graph_distance.graph_metrics as gm
 import pytest
