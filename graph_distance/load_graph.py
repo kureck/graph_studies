@@ -1,4 +1,3 @@
-import networkx as nx
 from collections import defaultdict
 from graph_distance.paths_setup import DEFAULT_GRAPH_IMAGE
 
@@ -12,10 +11,6 @@ class Graph:
 
     def graph(self):
         return self._graph
-
-
-    def graph_networkx(self):
-        return self._create_networkx_graph()
 
 
     def _load_graph_as_dict(self, routes):
@@ -32,17 +27,6 @@ class Graph:
             graph[source].update({route[1]: route[2]}) 
 
         return graph
-
-
-    def _load_networkx_graph_from_file(self, routes):
-        """ Transform a list of tuples into a graph object
-
-            :param routes: list of routes tuples
-            :returns: a networkx graph object
-        """
-        DG = nx.DiGraph()
-        DG.add_weighted_edges_from(routes)
-        return DG
 
 
     def _load_file(self):
@@ -81,26 +65,5 @@ class Graph:
     def _create_dict_graph(self, file_name):
         graph = self._load_graph_as_dict(self._split_routes_input(self._load_file()))
         return graph
-
-
-    def _create_networkx_graph(self):
-        DG = self._load_networkx_graph_from_file(self._split_routes_input(self._load_file()))
-        return DG
-
-
-def plot_graph(graph):
-    import matplotlib.pyplot as plt
-    nx.draw_random(graph)
-    plt.savefig(DEFAULT_GRAPH_IMAGE)
-
-
-def run(file_name):
-    DG = Graph(file_name).graph_networkx()
-    plot_graph(DG)
-
-
-if __name__ == "__main__":
-    from graph_distance.paths_setup import DEFAULT_INPUT_FILE
-    run(DEFAULT_INPUT_FILE)
 
 

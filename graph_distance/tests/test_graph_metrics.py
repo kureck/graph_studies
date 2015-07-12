@@ -1,5 +1,4 @@
 from graph_distance.paths_setup import DEFAULT_INPUT_FILE
-import graph_distance.load_graph as lg
 import graph_distance.graph_metrics as gm
 import pytest
 
