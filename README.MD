@@ -1,3 +1,53 @@
+# How to use it
+
+## Requirements
+
+1. Python 2.7 or Python 3.4
+2. git
+3. virtualenv
+4. Linux ou Mac
+
+### Installation
+
+Go to a directory of your choice to create a virtual environment using virtualenv for Python 2.7 or pyvenv for Python 3.4
+
+Python 2.7:
+
+- virtualenv graph_distance
+
+Python 3.4:
+
+- pyvenv-3.4 graph_distance
+
+If you have some pip trouble try this:
+
+- pyvenv-3.4 --without-pip graph_distance
+- cd graph_distance
+- source bin/activate
+- wget https://pypi.python.org/packages/source/s/setuptools/setuptools-3.4.4.tar.gz
+- tar -vzxf setuptools-3.4.4.tar.gz
+- cd setuptools-3.4.4
+- python setup.py install
+- cd ..
+- wget https://pypi.python.org/packages/source/p/pip/pip-1.5.6.tar.gz
+- tar -vzxf pip-1.5.6.tar.gz
+- cd pip-1.5.6
+- python setup.py install
+- cd ..
+- deactivate
+- source ./myvenv/bin/activate
+
+Else, continue to download and run the code:
+
+- cd graph_distance
+- source bin/activate
+- git clone https://github.com/kureck/graph_studies
+- cd graph_studies
+- pip install -e .
+- py.test graph_distance/tests # to run tests
+- python main.py
+
+
 # Deliver products to customer
 
 The purpose of this problem is to help the suppliers with information about the routes to delivery product.

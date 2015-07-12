@@ -22,7 +22,7 @@ config = {
     'install_requires': ['pytest'],
     'packages': ['graph_distance'],
     'scripts': [],
-    'name': 'Graph Route distance studies',
+    'name': 'graph_routes_distances_studies',
     'long_description': read('README.MD')
 }
 
