@@ -1,4 +1,4 @@
-# Deliver products to customer - How to use it
+# Deliver products to customer - How to use
 
 ## Requirements
 
@@ -54,7 +54,7 @@ pip install -e .
 py.test graph_distance/tests # to run tests
 python main.py
 ```
-
+---
 
 ## Description
 
