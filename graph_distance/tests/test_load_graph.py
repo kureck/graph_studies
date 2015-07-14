@@ -3,7 +3,7 @@
     ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Tests the steps to create a graph dictionary
-    structure from a file. 
+    structure from a file.
 
 """
 
@@ -20,7 +20,8 @@ def graph():
 
 def test_load_file(graph):
     routes = graph._load_file()
-    assert routes == ["AB5", "BC4", "CD8", "DC8", "DE6", "AD5", "CE2", "EB3", "AE7"]
+    assert routes == ["AB5", "BC4", "CD8", "DC8",
+                      "DE6", "AD5", "CE2", "EB3", "AE7"]
 
 
 def test_split_single_route(graph):
@@ -33,6 +34,7 @@ def test_split_routes_input(graph):
     routes = graph._split_routes_input(routes_input)
     assert routes == [("A", "B", 5), ("B", "C", 4), ("C", "D", 8)]
 
+
 def test_load_graph_as_dict(graph):
     routes = [("A", "B", 5), ("A", "D", 5), ("A", "E", 7),
               ("B", "C", 4),
@@ -40,8 +42,8 @@ def test_load_graph_as_dict(graph):
               ("D", "C", 8), ("D", "E", 6),
               ("E", "B", 3)]
     graph_as_dict = graph._load_graph_as_dict(routes)
-    assert graph_as_dict == { "A": { "B": 5, "D": 5, "E": 7},
-                              "B": { "C": 4},
-                              "C": { "D": 8, "E": 2},
-                              "D": { "C": 8, "E": 6},
-                              "E": { "B": 3}}
+    assert graph_as_dict == {"A": {"B": 5, "D": 5, "E": 7},
+                             "B": {"C": 4},
+                             "C": {"D": 8, "E": 2},
+                             "D": {"C": 8, "E": 6},
+                             "E": {"B": 3}}

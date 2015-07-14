@@ -13,6 +13,7 @@
 
 from graph_distance.load_graph import Graph
 
+
 class GraphMetrics:
 
     def __init__(self, file_name):
@@ -21,7 +22,6 @@ class GraphMetrics:
             :param file_name: a text file with the routes and its weights
         """
         self._graph = Graph(file_name).graph()
-
 
     def _get_route(self, route):
         """ Gets the route vertices in the "A-D-C-E" format
@@ -33,7 +33,6 @@ class GraphMetrics:
             :returns: a list of vertices
         """
         return route.split("-")
-
 
     def path_distance(self, route):
         """ Evaluates the distance between vertices passing
@@ -55,8 +54,8 @@ class GraphMetrics:
             total_distance += distance
         return total_distance
 
-
-    # The number of trips starting at C and ending at C with a maximum of 3 stops
+    # The number of trips starting at C and
+    # ending at C with a maximum of 3 stops
     def trips_with_max_stops(self, start, objective, max_stops, n_stops_cycle, stops=0):
         """ Evaluates stops between vertices limited by a maximum value
 
@@ -64,13 +63,20 @@ class GraphMetrics:
             :param objective: A string vertice where the trip ends
             :param max_stops: A int value representing the upper bound of stops
                               made between start and objective
-            :param n_stops_cycle: A list with all numbers of stops 
+            :param n_stops_cycle: A list with all numbers of stops
                                   between start and end.
             :param stops: a counter to control how many stops has been made so far
 
             :returns: a sum of all stops that is less than or equal to max_stops
         """
+        # counts the stops so far
         stops += 1
+
+        # for each node adjacent to start, check if it's the objective
+        # if it is, adds to a list the value of stops made until then
+        # else, accesses recursively the adjacent nodes.
+        # In the end, returns the sum of all stops that are more
+        # than or equal to max_stops
         for node in self._graph[start]:
 
             if node == objective:
@@ -79,14 +85,14 @@ class GraphMetrics:
                 self.trips_with_max_stops(node, objective, max_stops, n_stops_cycle, stops)
         return sum([1 for x in n_stops_cycle if x <= max_stops])
 
-
     # Has one problem here!
     # If the keys are not sorted the behavior is inconstant.
     # The answer depends on the order which the neighbor is visited.
     # For example:
     #   when the node D is visited the two possibles neighbors are C and E
     #   if we first visit C it marks C as visited then the recursion goes to
-    #   the next D neighbor (E). When it gets there, C somehow has been marked as visited
+    #   the next D neighbor (E). When it gets there,
+    #   C somehow has been marked as visited
     #   then the recursion stops when the next C is found.
     #   This doesn't happen when the order is the opposite.
     def trips_with_exact_stops(self, start, objective, max_stops, n_stops_cycle, stops=0, visited=False):
@@ -104,7 +110,17 @@ class GraphMetrics:
 
             :returns: a sum of all stops that is equal to max_stops
         """
+        # counts the stops made so far
         stops += 1
+
+        # for each node adjacent to start, check if it's the objective
+        # and if has already been visited
+        # if it is, adds to a list the value of stops made until then
+        # else, checks if current is equals to objective
+        # if it is, mark it as visited
+        # then accesses recursively the adjacent nodes.
+        # In the end, returns the sum of all stops that are exactly
+        # equal to max_stops
         for node in sorted(self._graph[start]):
             if node == objective and visited is True:
                 n_stops_cycle.append(stops)
@@ -113,7 +129,6 @@ class GraphMetrics:
                     visited = True
                 self.trips_with_exact_stops(node, objective, max_stops, n_stops_cycle, stops, visited)
         return sum([1 for x in n_stops_cycle if x == (max_stops + 1)])
-
 
     def dijkstra(self, start, objective):
         """ Implementation of Dijkstra Algorithm to find
@@ -126,20 +141,32 @@ class GraphMetrics:
             :returns: a int representing the minimum distance value
                       between vertices start and objective
         """
+        # sets a variable as infinity
         inf = float('inf')
+        # initialize the distances with infinity values for each node
         distances = {key: inf for key in self._graph.keys()}
+        # each parent is set as None
         parent = {key: None for key in self._graph.keys()}
+        # nodes are set to infinity. This structure is used as a queue
+        # to control the minimum distance
         nodes = {key: inf for key in self._graph.keys()}
 
+        # then initializes the start node with 0
         distances[start] = 0
         nodes[start] = 0
 
+        # while node is not empty
         while nodes:
+            # gets de smallest distance on node
             smallest, nodes = self._get_smallest(nodes)
 
+            # checks if this node is unreachable
             if smallest is None or distances[smallest] == inf:
                 break
 
+            # The variable alt is the length of the path from the start node
+            # to the neighbor node. If this path is shorter than the current
+            # shortest path, that current path is replaced with this alt path.
             for neighbor in self._graph[smallest]:
                 alt = distances[smallest] + self._graph[smallest][neighbor]
                 if alt < distances[neighbor]:
@@ -149,33 +176,38 @@ class GraphMetrics:
 
         return distances.get(objective, 0)
 
-
     def _get_smallest(self, nodes):
         """ Gets the smallest value from a route dictionary
-            representing the possible next step from 
+            representing the possible next step from
             the current vertice
 
             :param nodes: a dictionary representing a vertice neighbor
                           and its weight
 
-            :returns: the smallest neighbor value 
+            :returns: the smallest neighbor value
                       and remaining neighbors dictionary
         """
+        # gets the minimum value from node dictionary
+        # removes it, then returns the smallest and the node dictionary
         smallest = min(nodes, key=nodes.get)
         del nodes[smallest]
         return smallest, nodes
 
-
     # The length of the shortest route (in terms of distance to travel) from A to C
     def shortest_path(self, origin, objective):
         """ Gets the shortest path between two vertices
-            
+
             :param origin: A string with the origin vertice
             :param objective: A string with the objective vertice
 
             :returns: the value with the minimum distance value
                       between origin and objective
         """
+        # if the origin is equal to objective the Dijsktra algortithm returns
+        # a value of 0 because it considers the distance to itself 0.
+        # To overcome this, the problem was split in two:
+        #   - from start to next shortest path neighbr
+        #   - then from this smallest neighbor to the objective
         if origin == objective:
             shortest_paths = { x: self.dijkstra(x, objective) for x in self._graph[objective].keys()}
             subsequent_shortest_path = min(shortest_paths, key=shortest_paths.get)
@@ -183,7 +215,6 @@ class GraphMetrics:
             shortest_path_from = self.dijkstra(origin, subsequent_shortest_path)
             return sum([min_value, shortest_path_from])
         return self.dijkstra(origin, objective)
-
 
     def num_routes(self, start, objective, distance):
         """ Gets the number of routes made between vertices start
@@ -194,14 +225,16 @@ class GraphMetrics:
 
             :returns: a number of routes with maximum distance
         """
-        all_routes = self._different_routes_C_C_30(start, objective, distance)
+        # gets all routes from start node to all nodes with maximum distance
+        all_routes = self._different_routes_from_node_max_distance(start, distance)
         num_routes = 0
 
+        # checks if the route starts with the start node
+        # and ends with the objective node
         for route in all_routes:
             if route.startswith(start) and route.endswith(objective):
                 num_routes += 1
         return num_routes
-
 
     def _join_paths(self, paths):
         """ Concatenates a list of strings
@@ -212,9 +245,8 @@ class GraphMetrics:
         """
         return ["".join(x) for x in paths]
 
-
     # The number of different routes from C to C with a distance of less than 30
-    def _different_routes_C_C_30(self, start, objective, max_distance, curr_dist=0, path=[]):
+    def _different_routes_from_node_max_distance(self, start, max_distance, curr_dist=0, path=[]):
         """ Evaluates the number of routes between two vertices limited 
             by an upper bound value
 
@@ -227,17 +259,26 @@ class GraphMetrics:
 
             :returns: a list of all paths with maximum distance (max_distance)
         """
+        # all nodes visited so far
         path = path + [start]
 
+        # if the distance so far is more than the maximum distance
+        # then it removes this node from the path and returns all
+        # this route
         if curr_dist > max_distance:
             path.pop()
             return [path]
 
         paths = []
 
+        # for each node adjacent to start
+        # gets the distance from the start to it
+        # then calls the method recursively to check all paths
         for node in self._graph[start]:
             distance = self._graph.get(start).get(node)
-            new_paths = self._different_routes_C_C_30(node, objective, max_distance, curr_dist + distance, path)
+            new_paths = self._different_routes_from_node_max_distance(node, max_distance, curr_dist + distance, path)
+
+            # adds all paths found so far that is 
             for new_path in new_paths:
                 paths.append(new_path)
         return self._join_paths(paths)
